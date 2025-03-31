@@ -1,14 +1,33 @@
-class Solution:
-    def maxProfit(self, prices: List[int]) -> int:
-        first_buy = prices[0] * -1
-        second_buy = prices[0] * -1
-        first_profit = 0
-        total_profit = 0
+// Code solution for problem 123. Best time to buy and sell stock III Leetcode
+// Solution by: Jordan Barba and Michell
+// Time complexity: O(n)
+// Space complexity: O(1)
 
-        for price in prices:
-            first_buy = max(first_buy, price * -1)
-            first_profit = max(first_profit, price + first_buy)
-            second_buy = max(second_buy, first_profit - price)
-            total_profit = max(total_profit, price + second_buy)
+class Solution {
+    public int maxProfit(int[] prices) {
+        
+        int firstBuy = -prices[0];   // Money after buying first stock
+        int secondBuy = -prices[0];  // Money after buying second stock
+        int firstProfit = 0;         // Profit after first transaction
+        int totalProfit = 0;         // Final max profit from at most two transactions
+        
+        for (int price : prices) {
+            firstBuy = Math.max(firstBuy, -price); // Keeps the cheapest stock
+            firstProfit = Math.max(firstProfit, firstBuy + price); // Takes profit when the stock is higher than the first buy, and the profit is higher than the current profit
+            secondBuy = Math.max(secondBuy, firstProfit - price); // Represents the maximum amount of money you have after buying a stock for the second time, considering you've already completed your first transaction (buy and sell).
+            totalProfit = Math.max(totalProfit, secondBuy + price); // Keeps the final max profit, by taking into consideration profit of selling the second stock, or staying without buying the second stock. [second_buy takes into consideration the first profit]
+        }
+        
+        return totalProfit;
+    }
+}
 
-        return total_profit
+// Mock run
+// stocks = [2,3,1,5,3,9]
+
+// 2 -> [-2,0,-2,0]
+// 3 -> [-2,1,-2,1]
+// 1 -> [-1,1,0,1]
+// 5 -> [-1,4,0,5]
+// 3 -> [-1,4,1,5]
+// 9 -> [-1,8,1,10] total_profit = 10 by making the transaction 1 -> 5 | 3 -> 9
